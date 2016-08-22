@@ -30,7 +30,8 @@ func TestItemQueryDeserialize(t *testing.T) {
 	deser := thrift.NewTDeserializer()
 
 	serialItemResponse, err := serial.Write(&itemResponse)
-	itemResponseReadCloser := ioutil.NopCloser(bytes.NewReader(serialItemResponse))
+	itemResponseReadCloser := ioutil.NopCloser(
+		bytes.NewReader(serialItemResponse))
 
 	if err != nil {
 		t.Error(err)
@@ -45,4 +46,21 @@ func TestItemQueryDeserialize(t *testing.T) {
 		t.Error("Incorrect data found in deserialized ItemResponse")
 	}
 
+}
+
+func TestItemQueryGetUrlParams(t *testing.T) {
+	t.Log("Constructing query url with params")
+
+	itemQuery := queries.NewItemQuery("id")
+	stringParam := queries.StringParam{
+		Key:   "show-example",
+		Value: "value",
+	}
+
+	itemQuery.Params = []queries.Param{&stringParam}
+	url := itemQuery.GetUrl("http://www.example.com/")
+
+	if url != "http://www.example.com/id?show-example=value" {
+		t.Error("Incorrect query url for itemQuery.GetUrl")
+	}
 }

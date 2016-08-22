@@ -8,6 +8,8 @@ A Golang client library for the Guardian's Content API
 
 This is a work in progress, and currently only supports the `ItemQuery` query type. 
 
+See [theguardian open platorm](http://open-platform.theguardian.com/documentation/) documentation for details of query parameters.
+
 ##Example usage
 
 ```go
@@ -22,6 +24,10 @@ import (
 func main() {
 	client := gocapiclient.NewGuardianContentClient("http://content.guardianapis.com/", "yourapikey")
 	itemQuery := queries.NewItemQuery("technology/2016/aug/12/no-mans-sky-review-hello-games")
+
+  // Adds query param
+	showParam := queries.StringParam{"show-fields", "all"}
+	itemQuery.Params = []queries.Param{&showParam}  
 
 	err := client.GetResponse(itemQuery)
 
