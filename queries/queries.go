@@ -25,6 +25,7 @@ func NewItemQuery(Id string) *ItemQuery {
 	return &itemQuery
 }
 
+// TODO: Need to test params to url
 func (itemQuery ItemQuery) GetUrl(base string) string {
 	paramString := ""
 
