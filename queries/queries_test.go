@@ -1,4 +1,4 @@
-package queries
+package queries_test
 
 import (
 	"bytes"
