@@ -13,6 +13,7 @@ type Query interface {
 }
 
 type ItemQuery struct {
+	Params   []Paramable
 	Id       string
 	Response *content.ItemResponse
 }
@@ -25,7 +26,20 @@ func NewItemQuery(Id string) *ItemQuery {
 }
 
 func (itemQuery ItemQuery) GetUrl(base string) string {
-	return base + itemQuery.Id
+	paramString := ""
+
+	for i, v := range itemQuery.Params {
+		if v != nil {
+			paramable := itemQuery.Params[i]
+			paramString += paramable.GetParams()
+		}
+	}
+
+	url := base + itemQuery.Id + paramString
+
+	println(url)
+
+	return url
 }
 
 func (itemQuery ItemQuery) Deserialize(deser *thrift.TDeserializer, r io.ReadCloser) error {
