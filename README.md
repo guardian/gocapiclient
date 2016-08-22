@@ -4,6 +4,29 @@ A Golang client library for the Guardian's Content API
 
 ---
 
-This is a work in progress, and thus private repo to collaborate on creating a Golang CAPI Client. 
+This is a work in progress, and currently only supports the `ItemQuery` query type. 
 
-When it reaches a state where it wouldn't be embarrasing to publish it to the wider community - we should!
+##Example usage
+
+```go
+package main
+
+import (
+	"github.com/guardian/gocapiclient"
+	"github.com/guardian/gocapiclient/queries"
+	"log"
+)
+
+func main() {
+	client := gocapiclient.NewGuardianContentClient("http://content.guardianapis.com/", "yourapikey")
+	itemQuery := queries.NewItemQuery("technology/2016/aug/12/no-mans-sky-review-hello-games")
+
+	err := client.GetResponse(itemQuery)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	println(itemQuery.Response.Status)
+}
+```
