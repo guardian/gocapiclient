@@ -13,7 +13,7 @@ type Query interface {
 }
 
 type ItemQuery struct {
-	Params   []Paramable
+	Params   []Param
 	Id       string
 	Response *content.ItemResponse
 }
@@ -27,13 +27,10 @@ func NewItemQuery(Id string) *ItemQuery {
 
 // TODO: Need to test params to url
 func (itemQuery ItemQuery) GetUrl(base string) string {
-	paramString := ""
 
-	for i, v := range itemQuery.Params {
-		if v != nil {
-			paramable := itemQuery.Params[i]
-			paramString += paramable.GetParams()
-		}
+	paramString := "?"
+	for _, v := range itemQuery.Params {
+		paramString += v.ToParamString() + "&"
 	}
 
 	url := base + itemQuery.Id + paramString
