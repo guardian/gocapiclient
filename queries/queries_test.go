@@ -30,7 +30,8 @@ func TestItemQueryDeserialize(t *testing.T) {
 	deser := thrift.NewTDeserializer()
 
 	serialItemResponse, err := serial.Write(&itemResponse)
-	itemResponseReadCloser := ioutil.NopCloser(bytes.NewReader(serialItemResponse))
+	itemResponseReadCloser := ioutil.NopCloser(
+		bytes.NewReader(serialItemResponse))
 
 	if err != nil {
 		t.Error(err)
