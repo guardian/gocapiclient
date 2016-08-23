@@ -25,17 +25,24 @@ func NewItemQuery(Id string) *ItemQuery {
 	return &itemQuery
 }
 
-// TODO: Need to test params to url
-func (itemQuery ItemQuery) GetUrl(base string) string {
+func createParamString(params []Param) string {
+	if len(params) == 0 {
+		return ""
+	}
 
 	paramString := "?"
-	for _, v := range itemQuery.Params {
+
+	for _, v := range params {
 		paramString += v.ToParamString() + "&"
 	}
 
-	url := base + itemQuery.Id + paramString
+	return paramString[:len(paramString)-1]
+}
 
-	println(url)
+func (itemQuery ItemQuery) GetUrl(base string) string {
+
+	paramString := createParamString(itemQuery.Params)
+	url := base + itemQuery.Id + paramString
 
 	return url
 }

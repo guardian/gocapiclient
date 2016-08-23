@@ -46,3 +46,20 @@ func TestItemQueryDeserialize(t *testing.T) {
 	}
 
 }
+
+func TestItemQueryGetUrlParams(t *testing.T) {
+	t.Log("Constructing query url with params")
+
+	itemQuery := queries.NewItemQuery("id")
+	stringParam := queries.StringParam{
+		Key:   "show-example",
+		Value: "value",
+	}
+
+	itemQuery.Params = []queries.Param{&stringParam}
+	url := itemQuery.GetUrl("http://www.example.com/")
+
+	if url != "http://www.example.com/id?show-example=value" {
+		t.Error("Incorrect query url for itemQuery.GetUrl")
+	}
+}
