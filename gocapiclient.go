@@ -6,7 +6,6 @@ import (
 	"github.com/guardian/gocapimodels/content"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 const ClientVersion = "0.1"
@@ -65,11 +64,11 @@ func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.Se
 	go func() {
 		defer close(ch)
 
-		pageNumber := int(1)
+		pageNumber := int64(1)
 
 		for {
 			// Need int param
-			pageNumberParam := queries.StringParam{"page", strconv.FormatInt(int64(pageNumber), 10)}
+			pageNumberParam := queries.IntParam{"page", pageNumber}
 			query.Params = append(originalParams, pageNumberParam)
 			err := contentClient.GetResponse(query)
 
