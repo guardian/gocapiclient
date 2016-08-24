@@ -26,6 +26,7 @@ func main() {
 	client := gocapiclient.NewGuardianContentClient("https://content.guardianapis.com/", "none")
 	searchQuery(client)
 	itemQuery(client)
+	searchQueryPaged(client)
 }
 
 func searchQuery(client *gocapiclient.GuardianContentClient) {
