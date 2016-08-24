@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	client := gocapiclient.NewGuardianContentClient("https://content.guardianapis.com/", "none")
+	client := gocapiclient.NewGuardianContentClient("https://content.guardianapis.com/", "my-api-key")
 	searchQuery(client)
 	itemQuery(client)
 	searchQueryPaged(client)
