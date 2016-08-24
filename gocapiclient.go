@@ -57,34 +57,29 @@ func (contentClient GuardianContentClient) GetResponse(q queries.Query) error {
 	return err
 }
 
-func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.SearchQuery) <-chan []*content.Content {
-	ch := make(chan []*content.Content)
-	originalParams := query.Params
+func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.SearchQuery) <-chan *content.SearchResponse {
+	ch := make(chan *content.SearchResponse)
 
 	go func() {
 		defer close(ch)
 
-		pageNumber := int64(1)
-
 		for {
-			pageNumberParam := queries.IntParam{"page", pageNumber}
-			query.Params = append(originalParams, pageNumberParam)
 			err := contentClient.GetResponse(query)
 
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			currentPage := query.Response.CurrentPage
-			totalPages := query.Response.Pages
+			currentPage := int64(query.Response.CurrentPage)
+			totalPages := int64(query.Response.Pages)
 
-			ch <- query.Response.Results
+			ch <- query.Response
 
 			if currentPage >= totalPages {
 				break
 			}
 
-			pageNumber += 1
+			query.NextPage()
 		}
 
 	}()

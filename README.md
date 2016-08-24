@@ -16,17 +16,37 @@ See [theguardian open platorm](http://open-platform.theguardian.com/documentatio
 package main
 
 import (
+	"fmt"
 	"github.com/guardian/gocapiclient"
 	"github.com/guardian/gocapiclient/queries"
 	"log"
-	"fmt"
+	"strconv"
 )
 
 func main() {
 	client := gocapiclient.NewGuardianContentClient("https://content.guardianapis.com/", "my-api-key")
 	searchQuery(client)
-	itemQuery(client)
 	searchQueryPaged(client)
+	itemQuery(client)
+}
+
+func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
+	searchQuery := queries.NewSearchQuery()
+	searchQuery.PageOffset = int64(10)
+
+	showParam := queries.StringParam{"q", "sausages"}
+	params := []queries.Param{&showParam}
+
+	searchQuery.Params = params
+
+	iterator := client.SearchQueryIterator(searchQuery)
+
+	for response := range iterator {
+		fmt.Println("Page: " + strconv.FormatInt(int64(response.CurrentPage), 10))
+		for _, v := range response.Results {
+			fmt.Println(v.ID)
+		}
+	}
 }
 
 func searchQuery(client *gocapiclient.GuardianContentClient) {
@@ -67,24 +87,5 @@ func itemQuery(client *gocapiclient.GuardianContentClient) {
 
 	fmt.Println(itemQuery.Response.Status)
 	fmt.Println(itemQuery.Response.Content.WebTitle)
-}
-
-func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
-	searchQuery := queries.NewSearchQuery()
-
-	showParam := queries.StringParam{"q", "sausages"}
-	params := []queries.Param{&showParam}
-
-	searchQuery.Params = params
-
-	iterator := client.SearchQueryIterator(client, searchQuery)
-
-	for results := range iterator {
-		fmt.Println("----- New Page -----")
-
-		for _, v := range results {
-			fmt.Println(v.ID)
-		}
-	}
 }
 ```
