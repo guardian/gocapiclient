@@ -67,4 +67,23 @@ func itemQuery(client *gocapiclient.GuardianContentClient) {
 	fmt.Println(itemQuery.Response.Status)
 	fmt.Println(itemQuery.Response.Content.WebTitle)
 }
+
+func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
+	searchQuery := queries.NewSearchQuery()
+
+	showParam := queries.StringParam{"q", "sausages"}
+	params := []queries.Param{&showParam}
+
+	searchQuery.Params = params
+
+	iterator := client.SearchQueryIterator(client, searchQuery)
+
+	for results := range iterator {
+		fmt.Println("----- New Page -----")
+
+		for _, v := range results {
+			fmt.Println(v.ID)
+		}
+	}
+}
 ```
