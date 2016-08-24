@@ -67,7 +67,6 @@ func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.Se
 		pageNumber := int64(1)
 
 		for {
-			// Need int param
 			pageNumberParam := queries.IntParam{"page", pageNumber}
 			query.Params = append(originalParams, pageNumberParam)
 			err := contentClient.GetResponse(query)
