@@ -5,6 +5,7 @@ import (
 	"github.com/guardian/gocapiclient"
 	"github.com/guardian/gocapiclient/queries"
 	"log"
+	"strconv"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 
 func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
 	searchQuery := queries.NewSearchQuery()
+	searchQuery.PageOffset = int64(10)
 
 	showParam := queries.StringParam{"q", "sausages"}
 	params := []queries.Param{&showParam}
@@ -24,9 +26,9 @@ func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
 
 	iterator := client.SearchQueryIterator(searchQuery)
 
-	for results := range iterator {
-		fmt.Println("----------------- New Page -----------------------")
-		for _, v := range results {
+	for response := range iterator {
+		fmt.Println("Page: " + strconv.FormatInt(int64(response.CurrentPage), 10))
+		for _, v := range response.Results {
 			fmt.Println(v.ID)
 		}
 	}
