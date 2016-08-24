@@ -76,7 +76,24 @@ func TestSearchQueryGetUrl(t *testing.T) {
 	searchQuery.Params = []queries.Param{&stringParam}
 	url := searchQuery.GetUrl("http://www.example.com/")
 
-	if url != "http://www.example.com/search?q=sausages" {
+	if url != "http://www.example.com/search?q=sausages&page=1" {
+		t.Error("Incorrect query url for searchQuery.GetUrl")
+	}
+}
+
+func TestSearchQueryGetUrlSetPage(t *testing.T) {
+	t.Log("Constructing search query url with page offset")
+	searchQuery := queries.NewSearchQuery()
+	searchQuery.PageOffset = 100
+	stringParam := queries.StringParam{
+		Key:   "q",
+		Value: "sausages",
+	}
+
+	searchQuery.Params = []queries.Param{&stringParam}
+	url := searchQuery.GetUrl("http://www.example.com/")
+
+	if url != "http://www.example.com/search?q=sausages&page=100" {
 		t.Error("Incorrect query url for searchQuery.GetUrl")
 	}
 }
