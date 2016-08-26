@@ -54,3 +54,8 @@ func (searchQuery SearchQuery) Deserialize(deser *thrift.TDeserializer, r io.Rea
 
 	return deser.Read(searchQuery.Response, rBytes)
 }
+
+type SearchPageResponse struct {
+	Err            error
+	SearchResponse *content.SearchResponse
+}

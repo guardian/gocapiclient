@@ -3,7 +3,6 @@ package gocapiclient
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/guardian/gocapiclient/queries"
-	"github.com/guardian/gocapimodels/content"
 	"log"
 	"net/http"
 )
@@ -57,8 +56,8 @@ func (contentClient GuardianContentClient) GetResponse(q queries.Query) error {
 	return err
 }
 
-func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.SearchQuery) <-chan *content.SearchResponse {
-	ch := make(chan *content.SearchResponse)
+func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.SearchQuery) <-chan *queries.SearchPageResponse {
+	ch := make(chan *queries.SearchPageResponse)
 
 	go func() {
 		defer close(ch)
@@ -67,13 +66,17 @@ func (contentClient GuardianContentClient) SearchQueryIterator(query *queries.Se
 			err := contentClient.GetResponse(query)
 
 			if err != nil {
-				log.Fatal(err)
+				log.Println("gocapiclient: Error getting response from CAPI")
+				log.Println(err)
+				break
 			}
 
 			currentPage := int64(query.Response.CurrentPage)
 			totalPages := int64(query.Response.Pages)
 
-			ch <- query.Response
+			pageResponse := &queries.SearchPageResponse{err, query.Response}
+
+			ch <- pageResponse
 
 			if currentPage >= totalPages {
 				break
