@@ -26,9 +26,9 @@ func searchQueryPaged(client *gocapiclient.GuardianContentClient) {
 
 	iterator := client.SearchQueryIterator(searchQuery)
 
-	for response := range iterator {
-		fmt.Println("Page: " + strconv.FormatInt(int64(response.CurrentPage), 10))
-		for _, v := range response.Results {
+	for page := range iterator {
+		fmt.Println("Page: " + strconv.FormatInt(int64(page.SearchResponse.CurrentPage), 10))
+		for _, v := range page.SearchResponse.Results {
 			fmt.Println(v.ID)
 		}
 	}
