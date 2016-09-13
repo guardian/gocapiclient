@@ -5,6 +5,7 @@ import (
 	"github.com/guardian/gocapiclient/queries"
 	"log"
 	"net/http"
+	"time"
 )
 
 const ClientVersion = "0.1"
@@ -19,6 +20,8 @@ type GuardianContentClient struct {
 
 func (contentClient GuardianContentClient) makeCapiRequest(q queries.Query) (*http.Response, error) {
 	url := q.GetUrl(contentClient.TargetUrl)
+
+	start := time.Now()
 
 	log.Println("gocapiclient: GET from " + url)
 
@@ -37,7 +40,12 @@ func (contentClient GuardianContentClient) makeCapiRequest(q queries.Query) (*ht
 
 	req.URL.RawQuery = values.Encode()
 
-	return contentClient.HttpClient.Do(req)
+	response, err := contentClient.HttpClient.Do(req)
+
+	elapsed := time.Since(start)
+	log.Printf("gocapiclient: Response took %s", elapsed)
+
+	return response, err
 }
 
 func (contentClient GuardianContentClient) GetResponse(q queries.Query) error {
