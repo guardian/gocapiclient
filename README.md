@@ -10,7 +10,7 @@ This is a work in progress, and currently only supports the `ItemQuery` and `Sea
 
 See [theguardian open platorm](http://open-platform.theguardian.com/documentation/) documentation for details of query parameters.
 
-##Example usage
+## Example usage
 
 ```go
 package main
